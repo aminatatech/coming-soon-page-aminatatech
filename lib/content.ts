@@ -65,11 +65,12 @@ export const content: Record<Lang, ContentStructure> = {
       highlight2: "site internet",
       tail: " bou yess."
     },
-    speech: "Dalal ak jamm! Aminata laa toudou. Jërejëf ci li nga fi tew. Dama nekk di défarat sama site internet ngir yessal ko. Su ñu sàgnoone, nga bokk ci ñi koy jëkka yëg bu paree. Su dee bëgg nga ko, mën nga fi bàyyi sa emayil walla sa telefon. Butoŋ yi mën a tax nga def loolu, mu ngi ci suuf. Na la jamm sonal.",
+    speech: "Dalal ak diam ! Aminata la toudou. Diere dieuf ci li nga fi téw. Dama nek di défarat sama sit intérnet ngir yessal ko. Sou niou sagnone, nga bok ci gni koy dieuka yeug bou paré. Sou dé beug nga ko, mén nga fi bayi sa émail wala sa téléphon. Bouton yi mén na tah nga def lolou, mou ngui ci souf. Na la diam sonal.",
     countdown: { days: "Fan", hours: "Waxtu", minutes: "Min", seconds: "Saas" },
     form: { placeholder: "Sa emayil...", button: "Bindeel" },
     badges: ["Défat Web", "Défat Mobile", "Nataal", "Xam-Xamu Joxe", "BI"]
   }
 }
 
-export const wolofSpeech = "Dalal ak jamm! Aminata laa toudou. Jërejëf ci li nga fi tew. Dama nekk di défarat sama site internet ngir yessal ko. Su ñu sàgnoone, nga bokk ci ñi koy jëkka yëg bu paree. Su dee bëgg nga ko, mën nga fi bàyyi sa emayil walla sa telefon. Butoŋ yi mën a tax nga def loolu, mu ngi ci suuf. Na la jamm sonal."
+// Version phonétique pour la voix automatique d'accueil
+export const wolofSpeech = "Dalal ak diam ! Aminata la toudou. Diere dieuf ci li nga fi téw. Dama nek di défarat sama sit intérnet ngir yessal ko. Sou niou sagnone, nga bok ci gni koy dieuka yeug bou paré. Sou dé beug nga ko, mén nga fi bayi sa émail wala sa téléphon. Bouton yi mén na tah nga def lolou, mou ngui ci souf. Na la diam sonal."
