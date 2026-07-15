@@ -29,17 +29,24 @@ export function ComingSoon() {
     const utterance = new SpeechSynthesisUtterance(textToSpeak)
     utteranceRef.current = utterance
 
-    // Synthèse adaptée selon la langue demandée
+    // Sélection dynamique d'une voix féminine douce et naturelle
+    const voices = window.speechSynthesis.getVoices()
+    
     if (textLang === 'en') {
       utterance.lang = 'en-US'
+      const englishFemale = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('female')))
+      if (englishFemale) utterance.voice = englishFemale
       utterance.rate = 0.95
     } else {
       utterance.lang = 'fr-FR'
-      // Une diction légèrement plus posée et douce pour le wolof
-      utterance.rate = textLang === 'wo' ? 0.82 : 0.95
+      const frenchFemale = voices.find(v => v.lang.startsWith('fr') && (v.name.includes('Amélie') || v.name.includes('Google') || v.name.includes('Hortense') || v.name.includes('Cécile') || v.name.includes('female')))
+      if (frenchFemale) utterance.voice = frenchFemale
+      
+      // Vitesse ralentie pour le Wolof afin de donner une prononciation majestueuse, posée et un accent naturel
+      utterance.rate = textLang === 'wo' ? 0.78 : 0.95
     }
 
-    // Gestion propre et synchrone des états de lecture
+    // Synchronisation stricte de l'icône dès le début de la voix
     utterance.onstart = () => setIsSpeaking(true)
     utterance.onend = () => setIsSpeaking(false)
     utterance.onerror = () => setIsSpeaking(false)
@@ -51,7 +58,6 @@ export function ComingSoon() {
     if (isSpeaking) {
       stopSpeech()
     } else {
-      // Lit le texte correspondant à la langue active (et tout le texte en Wolof si on est sur 'wo')
       const textToSpeak = lang === 'wo' ? wolofSpeech : t.speech
       startSpeech(textToSpeak, lang)
     }
@@ -66,12 +72,11 @@ export function ComingSoon() {
     })
   }, [stopSpeech])
 
-  // 🔊 DÉCLENCHEMENT AUDIO PAR DÉFAUT EN WOLOF AU CHARGEMENT DE LA PAGE
+  // Déclenchement automatique de l'audio Wolof dès l'arrivée sur le site
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Au démarrage du site, on joue directement le texte d'accueil en Wolof
       startSpeech(wolofSpeech, 'wo')
-    }, 1000) // Un délai de 1s pour laisser le navigateur autoriser le flux audio
+    }, 1200) // Laisse le temps au navigateur de charger les voix système
 
     return () => {
       clearTimeout(timer)
