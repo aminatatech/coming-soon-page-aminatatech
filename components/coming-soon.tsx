@@ -9,8 +9,8 @@ import { SubscribeForm } from '@/components/subscribe-form'
 import { DisciplineBadges } from '@/components/discipline-badges'
 
 export function ComingSoon() {
-  const [lang, setLang] = useState<Lang>('wo') // Wolof par défaut
-  const [isSpeaking, setIsSpeaking] = useState(false) // Audio désactivé (mute) par défaut pour éviter les blocages de navigateur
+  const [lang, setLang] = useState<Lang>('en')
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const t = content[lang]
 
   const stopSpeech = useCallback(() => {
@@ -20,58 +20,29 @@ export function ComingSoon() {
     setIsSpeaking(false)
   }, [])
 
-  const startSpeech = useCallback((text: string, currentLang: Lang) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-
-    window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(text)
-
-    // Configuration optimale de la langue de synthèse
-    if (currentLang === 'wo') {
-      utterance.lang = 'fr-FR' // Utilisation d'une base FR pour que la lecture du wolof ait l'accentuation naturelle locale
-      utterance.rate = 0.85   // Légèrement ralenti pour donner un ton posé et naturel
-    } else if (currentLang === 'fr') {
-      utterance.lang = 'fr-FR'
-      utterance.rate = 0.95
-    } else {
-      utterance.lang = 'en-US'
-      utterance.rate = 0.95
-    }
-
-    utterance.onend = () => setIsSpeaking(false)
-    utterance.onerror = () => setIsSpeaking(false)
-
-    window.speechSynthesis.speak(utterance)
-    setIsSpeaking(true)
-  }, [])
-
   const toggleAudio = useCallback(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
     if (isSpeaking) {
       stopSpeech()
-    } else {
-      startSpeech(t.speech, lang)
+      return
     }
-  }, [isSpeaking, lang, stopSpeech, startSpeech, t.speech])
+    const utterance = new SpeechSynthesisUtterance(t.speech)
+    utterance.lang = lang === 'en' ? 'en-US' : 'fr-FR'
+    utterance.onend = () => setIsSpeaking(false)
+    utterance.onerror = () => setIsSpeaking(false)
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utterance)
+    setIsSpeaking(true)
+  }, [isSpeaking, lang, stopSpeech, t.speech])
 
-  // Cycle de changement de langue : Wolof -> Français -> Anglais -> Wolof
-  const toggleLang = useCallback(() => {
-    stopSpeech()
-    setLang((prev) => {
-      if (prev === 'wo') return 'fr'
-      if (prev === 'fr') return 'en'
-      return 'wo'
-    })
-  }, [stopSpeech])
-
-  // Si l'audio tourne et qu'on change de langue, on enchaîne directement l'audio dans la nouvelle langue
-  useEffect(() => {
-    if (isSpeaking) {
-      startSpeech(t.speech, lang)
-    }
-  }, [lang])
-
+  // Stop any narration when unmounting or switching language.
   useEffect(() => {
     return () => stopSpeech()
+  }, [stopSpeech])
+
+  const toggleLang = useCallback(() => {
+    stopSpeech()
+    setLang((prev) => (prev === 'en' ? 'fr' : 'en'))
   }, [stopSpeech])
 
   return (
@@ -92,15 +63,15 @@ export function ComingSoon() {
           <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
             {t.message.lead}
             <span
-              className="animate-text-breathe font-semibold text-ember inline-block transition-transform duration-500"
-              style={{ willChange: 'opacity, transform' }}
+              className="animate-text-breathe font-semibold text-ember"
+              style={{ willChange: 'opacity' }}
             >
               {t.message.highlight1}
-            </span> 
+            </span>
             {t.message.mid}
             <span
-              className="animate-text-breathe font-semibold text-ember inline-block transition-transform duration-500 [animation-delay:2s]"
-              style={{ willChange: 'opacity, transform' }}
+              className="animate-text-breathe font-semibold text-ember [animation-delay:2s]"
+              style={{ willChange: 'opacity' }}
             >
               {t.message.highlight2}
             </span>
