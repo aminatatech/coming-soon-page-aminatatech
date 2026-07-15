@@ -1,4 +1,4 @@
-export type Lang = 'wo' | 'fr' | 'en'
+export type Lang = 'fr' | 'en'
 
 export interface ContentStructure {
   audioLabel: string
@@ -11,21 +11,6 @@ export interface ContentStructure {
 }
 
 export const content: Record<Lang, ContentStructure> = {
-  wo: {
-    audioLabel: "Audio",
-    langLabel: "Wolof",
-    message: {
-      lead: "Dalal ak diam ! ",
-      highlight1: "Dama nek di défarat sama sit intérnet",
-      mid: " ngir ",
-      highlight2: "yessal ko.",
-      tail: ""
-    },
-    speech: "Dalal ak diam ! Aminata la toudou. Diere dieuf ci li nga fi téw. Dama nek di défarat sama sit intérnet ngir yessal ko. Sou niou sagnone, nga bok ci gni koy dieuka yeug bou paré. Sou dé beug nga ko, mén nga fi bayi sa émail wala sa téléphon. Bouton yi mén na tah nga def lolou, mou ngui ci souf. Na la diam sonal.",
-    countdown: { days: "Fan", hours: "Waxtu", minutes: "Min", seconds: "Saas" },
-    form: { placeholder: "Sa emayil...", button: "Bindeel" },
-    badges: ["Défat Web", "Défat Mobile", "Nataal", "Xam-Xamu Joxe", "BI"]
-  },
   fr: {
     audioLabel: "Audio",
     langLabel: "Français",
@@ -57,5 +42,3 @@ export const content: Record<Lang, ContentStructure> = {
     badges: ["Web Dev", "Mobile Dev", "Design", "Data Science", "Business Intelligence"]
   }
 }
-
-export const wolofSpeech = content.wo.speech
