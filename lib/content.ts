@@ -1,71 +1,73 @@
-export type Lang = 'en' | 'fr'
+export type Lang = 'wo' | 'fr' | 'en'
 
-export const content = {
-  en: {
-    audioLabel: 'Listen to this page',
-    langLabel: 'Switch to French',
-    // Split so we can highlight the key technical words.
+export interface ContentStructure {
+  audioLabel: string
+  langLabel: string // Nom de la langue actuelle affiché sur le bouton
+  message: {
+    lead: string
+    highlight1: string
+    mid: string
+    highlight2: string
+    tail: string
+  }
+  speech: string
+  countdown: {
+    days: string
+    hours: string
+    minutes: string
+    seconds: string
+  }
+  form: {
+    placeholder: string
+    button: string
+  }
+  badges: string[]
+}
+
+export const content: Record<Lang, ContentStructure> = {
+  wo: {
+    audioLabel: "Soni",
+    langLabel: "Wolof", 
     message: {
-      lead: 'Thank you for being here. Currently ',
-      highlight1: 'crafting',
-      mid: ' a brand new ',
-      highlight2: 'experience',
-      tail: '. See you very soon, I hope.',
+      lead: "Dalal ak jamm ! Aminata laa toudou. Jërejëf ci li nga fi tew. Dama nekk di ",
+      highlight1: "défarat",
+      mid: " sama site internet ngir ",
+      highlight2: "yessal ko",
+      tail: ". Su ñu sàgnoone, nga bokk ci ñi koy jëkka yëg bu paree. Su dee bëgg nga ko, mën nga fi bàyyi sa emayil walla sa telefon. Butoŋ yi mën a tax nga def loolu, mu ngi ci suuf. Na la jamm sonal."
     },
-    speech:
-      'Thank you for being here. Currently crafting a brand new experience. See you very soon, I hope.',
-    countdown: {
-      days: 'Days',
-      hours: 'Hours',
-      minutes: 'Minutes',
-      seconds: 'Seconds',
-    },
-    form: {
-      emailTab: 'Email',
-      whatsappTab: 'WhatsApp',
-      emailPlaceholder: 'you@example.com',
-      whatsappPlaceholder: '+1 555 000 0000',
-      notify: 'Notify Me',
-      success: 'You are on the list. Talk soon.',
-    },
-    badges: [
-      'Business Intelligence',
-      'Web & Mobile Engineering',
-      'Digital Marketing Architectures',
-      'And Much More...',
-    ],
+    speech: "Dalal ak jamm! Aminata laa toudou. Jërejëf ci li nga fi tew. Dama nekk di défarat sama site internet ngir yessal ko. Su ñu sàgnoone, nga bokk ci ñi koy jëkka yëg bu paree. Su dee bëgg nga ko, mën nga fi bàyyi sa emayil walla sa telefon. Butoŋ yi mën a tax nga def loolu, mu ngi ci suuf. Na la jamm sonal.",
+    countdown: { days: "Fan", hours: "Waxtu", minutes: "Simis", seconds: "Saas" },
+    form: { placeholder: "Sa emayil...", button: "Bàyyi ko fi" },
+    badges: ["Web Dev", "Mobile Dev", "Design", "Data Science", "Business Intelligence"]
   },
   fr: {
-    audioLabel: 'Écouter cette page',
-    langLabel: "Passer à l'anglais",
+    audioLabel: "Audio",
+    langLabel: "Français",
     message: {
-      lead: "Merci d'être ici. Je suis en train de ",
-      highlight1: 'concevoir',
-      mid: ' une toute nouvelle ',
-      highlight2: 'expérience',
-      tail: '. À très bientôt, je l’espère.',
+      lead: "Enchantée, je suis Aminata. Merci d'être là. Actuellement en train de ",
+      highlight1: "concevoir",
+      mid: " une toute nouvelle ",
+      highlight2: "expérience",
+      tail: ". À très bientôt, je l'espère."
     },
-    speech:
-      "Merci d'être ici. Je suis en train de concevoir une toute nouvelle expérience. À très bientôt, je l'espère.",
-    countdown: {
-      days: 'Jours',
-      hours: 'Heures',
-      minutes: 'Minutes',
-      seconds: 'Secondes',
-    },
-    form: {
-      emailTab: 'Email',
-      whatsappTab: 'WhatsApp',
-      emailPlaceholder: 'vous@exemple.com',
-      whatsappPlaceholder: '+33 6 00 00 00 00',
-      notify: 'Me Prévenir',
-      success: 'Vous êtes sur la liste. À très vite.',
-    },
-    badges: [
-      'Business Intelligence',
-      'Ingénierie Web & Mobile',
-      'Architectures Marketing Digital',
-      'Et Bien Plus...',
-    ],
+    speech: "Enchantée, je suis Aminata. Merci d'être là. Actuellement en train de concevoir une toute nouvelle expérience. À très bientôt, je l'espère.",
+    countdown: { days: "Jours", hours: "Heures", minutes: "Min", seconds: "Sec" },
+    form: { placeholder: "Votre e-mail...", button: "S'abonner" },
+    badges: ["Dév Web", "Dév Mobile", "Design", "Data Science", "Business Intelligence"]
   },
-} satisfies Record<Lang, unknown>
+  en: {
+    audioLabel: "Audio",
+    langLabel: "English",
+    message: {
+      lead: "Nice to meet you, I am Aminata. Thank you for being here. Currently ",
+      highlight1: "crafting",
+      mid: " a brand new ",
+      highlight2: "experience",
+      tail: ". See you very soon, I hope."
+    },
+    speech: "Nice to meet you, I am Aminata. Thank you for being here. Currently crafting a brand new experience. See you very soon, I hope.",
+    countdown: { days: "Days", hours: "Hours", minutes: "Min", seconds: "Sec" },
+    form: { placeholder: "Your email...", button: "Notify me" },
+    badges: ["Web Dev", "Mobile Dev", "Design", "Data Science", "Business Intelligence"]
+  }
+}
