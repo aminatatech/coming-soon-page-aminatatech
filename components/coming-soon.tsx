@@ -1,147 +1,65 @@
 'use client'
 
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { content, wolofSpeech, type Lang } from '@/lib/content'
-import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
-import { CountdownTimer } from '@/components/countdown-timer'
-import { SubscribeForm } from '@/components/subscribe-form'
-import { DisciplineBadges } from '@/components/discipline-badges'
 
 export function ComingSoon() {
-  const [lang, setLang] = useState<Lang>('fr') // Français par défaut à l'écrit
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
+  const [lang, setLang] = useState<Lang>('wo')
+  const [isSpeaking, setIsSpeaking] = useState(true)
   const t = content[lang]
 
   const stopSpeech = useCallback(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-    }
+    window.speechSynthesis.cancel()
     setIsSpeaking(false)
   }, [])
 
-  const startSpeech = useCallback((textToSpeak: string, textLang: Lang) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-
+  const startSpeech = useCallback((text: string, l: Lang) => {
     window.speechSynthesis.cancel()
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak)
-    utteranceRef.current = utterance
-
-    // Chargement et sélection stricte d'une voix féminine avec une intonation naturelle
+    const utterance = new SpeechSynthesisUtterance(text)
     const voices = window.speechSynthesis.getVoices()
+    utterance.lang = l === 'en' ? 'en-US' : 'fr-FR'
     
-    if (textLang === 'en') {
-      utterance.lang = 'en-US'
-      const englishFemale = voices.find(v => 
-        v.lang.startsWith('en') && 
-        (v.name.includes('Google') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.toLowerCase().includes('female'))
-      )
-      if (englishFemale) utterance.voice = englishFemale
-      utterance.rate = 0.95
-    } else {
-      // Pour le français ou le Wolof, on cherche impérativement une voix féminine douce
-      utterance.lang = 'fr-FR'
-      
-      // On classe les voix féminines françaises par ordre de qualité de diction naturelle
-      const frenchFemale = voices.find(v => 
-        v.lang.startsWith('fr') && 
-        (
-          v.name.includes('Amélie') || 
-          v.name.includes('Google français') || 
-          v.name.includes('Cécile') || 
-          v.name.includes('Hortense') || 
-          v.name.toLowerCase().includes('female')
-        )
-      )
-      if (frenchFemale) utterance.voice = frenchFemale
-      
-      // Vitesse ralentie à 0.75 pour le Wolof afin de donner cet accent posé, majestueux et naturel propre à la diction locale
-      utterance.rate = textLang === 'wo' ? 0.75 : 0.95
-    }
-
-    // Changement d'état immédiat dès le début pour éliminer tout lag visuel
+    // Sélection forcée : voix féminine + priorité Google
+    const targetVoice = voices.find(v => 
+      v.lang.startsWith(l === 'en' ? 'en' : 'fr') && 
+      (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('female')) &&
+      !v.name.toLowerCase().includes('male')
+    )
+    if (targetVoice) utterance.voice = targetVoice
+    
+    utterance.rate = l === 'wo' ? 0.74 : 0.95
+    utterance.pitch = 1.05
     utterance.onstart = () => setIsSpeaking(true)
     utterance.onend = () => setIsSpeaking(false)
-    utterance.onerror = () => setIsSpeaking(false)
-
     window.speechSynthesis.speak(utterance)
   }, [])
 
   const toggleAudio = useCallback(() => {
-    if (isSpeaking) {
-      stopSpeech()
-    } else {
-      const textToSpeak = lang === 'wo' ? wolofSpeech : t.speech
-      startSpeech(textToSpeak, lang)
-    }
-  }, [isSpeaking, stopSpeech, startSpeech, lang, t.speech])
+    if (isSpeaking) stopSpeech()
+    else startSpeech(lang === 'wo' ? wolofSpeech : t.speech, lang)
+  }, [isSpeaking, lang, stopSpeech, startSpeech, t.speech])
 
   const toggleLang = useCallback(() => {
     stopSpeech()
-    setLang((prev) => {
-      if (prev === 'fr') return 'en'
-      if (prev === 'en') return 'wo'
-      return 'fr'
-    })
+    setLang(p => (p === 'wo' ? 'fr' : p === 'fr' ? 'en' : 'wo'))
   }, [stopSpeech])
 
-  // Déclenchement de l'audio au chargement avec synchronisation immédiate de l'état
   useEffect(() => {
-    // On met l'icône en mode actif "Désactiver le son" immédiatement pour correspondre au démarrage audio
-    setIsSpeaking(true)
-
-    const timer = setTimeout(() => {
-      startSpeech(wolofSpeech, 'wo')
-    }, 1000)
-
-    // Si l'utilisateur clique ou change de page avant la fin, on nettoie proprement
-    return () => {
-      clearTimeout(timer)
-      stopSpeech()
-    }
-  }, [startSpeech, stopSpeech])
+    startSpeech(wolofSpeech, 'wo')
+  }, [startSpeech])
 
   return (
-    <main className="relative flex min-h-svh flex-col overflow-hidden bg-background">
-      <CircuitBackground />
-
-      <div className="relative z-10 flex min-h-svh flex-col">
-        <SiteHeader
-          lang={lang}
-          audioLabel="Wolof"
-          langLabel={t.langLabel}
-          isSpeaking={isSpeaking}
-          onToggleLang={toggleLang}
-          onToggleAudio={toggleAudio}
-        />
-
-        <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center sm:gap-12 sm:px-10">
-          <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
-            {t.message.lead}
-            <span
-              className="animate-text-breathe font-semibold text-ember"
-              style={{ willChange: 'opacity' }}
-            >
-              {t.message.highlight1}
-            </span>
-            {t.message.mid}
-            <span
-              className="animate-text-breathe font-semibold text-ember [animation-delay:2s]"
-              style={{ willChange: 'opacity' }}
-            >
-              {t.message.highlight2}
-            </span>
-            {t.message.tail}
-          </h1>
-
-          <CountdownTimer labels={t.countdown} />
-
-          <SubscribeForm labels={t.form} />
-
-          <DisciplineBadges badges={t.badges} />
-        </div>
+    <main className="relative flex min-h-svh flex-col bg-background">
+      <SiteHeader lang={lang} audioLabel="Audio" isSpeaking={isSpeaking} onToggleLang={toggleLang} onToggleAudio={toggleAudio} />
+      <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
+        <h1 className="max-w-3xl text-2xl font-medium tracking-tight sm:text-5xl">
+          {t.message.lead}
+          <span className="font-semibold text-ember">{t.message.highlight1}</span>
+          {t.message.mid}
+          <span className="font-semibold text-ember">{t.message.highlight2}</span>
+          {t.message.tail}
+        </h1>
       </div>
     </main>
   )
