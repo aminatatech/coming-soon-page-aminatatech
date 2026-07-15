@@ -1,12 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { content, wolofSpeech, type Lang } from '@/lib/content'
 import { SiteHeader } from '@/components/site-header'
 
 export function ComingSoon() {
   const [lang, setLang] = useState<Lang>('wo')
-  const [isSpeaking, setIsSpeaking] = useState(false) // Correction : désactivé au départ
+  const [isSpeaking, setIsSpeaking] = useState(false) // Initialisé à false (silencieux)
   const t = content[lang]
 
   const stopSpeech = useCallback(() => {
@@ -20,7 +20,7 @@ export function ComingSoon() {
     const voices = window.speechSynthesis.getVoices()
     utterance.lang = l === 'en' ? 'en-US' : 'fr-FR'
     
-    // Sélection de voix féminine prioritaire
+    // Sélection forcée voix féminine
     const targetVoice = voices.find(v => 
       v.lang.startsWith(l === 'en' ? 'en' : 'fr') && 
       (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google')) &&
@@ -39,7 +39,6 @@ export function ComingSoon() {
     if (isSpeaking) {
       stopSpeech()
     } else {
-      // Lance l'audio seulement sur demande
       startSpeech(lang === 'wo' ? wolofSpeech : t.speech, lang)
     }
   }, [isSpeaking, lang, stopSpeech, startSpeech, t.speech])
@@ -51,13 +50,7 @@ export function ComingSoon() {
 
   return (
     <main className="relative flex min-h-svh flex-col bg-background">
-      <SiteHeader 
-        lang={lang} 
-        audioLabel="Audio" 
-        isSpeaking={isSpeaking} 
-        onToggleLang={toggleLang} 
-        onToggleAudio={toggleAudio} 
-      />
+      <SiteHeader lang={lang} audioLabel="Audio" isSpeaking={isSpeaking} onToggleLang={toggleLang} onToggleAudio={toggleAudio} />
       <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
         <h1 className="max-w-3xl text-2xl font-medium tracking-tight sm:text-5xl">
           {t.message.lead}
