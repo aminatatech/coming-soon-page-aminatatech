@@ -1,7 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { content, type Lang } from '@/lib/content'
+import { useCallback, useEffect, useState, useRef } from 'react'
+import { content, wolofSpeech, type Lang } from '@/lib/content'
 import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
 import { CountdownTimer } from '@/components/countdown-timer'
@@ -9,8 +9,9 @@ import { SubscribeForm } from '@/components/subscribe-form'
 import { DisciplineBadges } from '@/components/discipline-badges'
 
 export function ComingSoon() {
-  const [lang, setLang] = useState<Lang>('en')
+  const [lang, setLang] = useState<Lang>('fr') // Français par défaut à l'écrit
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
   const t = content[lang]
 
   const stopSpeech = useCallback(() => {
@@ -20,30 +21,63 @@ export function ComingSoon() {
     setIsSpeaking(false)
   }, [])
 
-  const toggleAudio = useCallback(() => {
+  const startSpeech = useCallback((textToSpeak: string, textLang: Lang) => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-    if (isSpeaking) {
-      stopSpeech()
-      return
+
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak)
+    utteranceRef.current = utterance
+
+    // Synthèse adaptée selon la langue demandée
+    if (textLang === 'en') {
+      utterance.lang = 'en-US'
+      utterance.rate = 0.95
+    } else {
+      utterance.lang = 'fr-FR'
+      // Une diction légèrement plus posée et douce pour le wolof
+      utterance.rate = textLang === 'wo' ? 0.82 : 0.95
     }
-    const utterance = new SpeechSynthesisUtterance(t.speech)
-    utterance.lang = lang === 'en' ? 'en-US' : 'fr-FR'
+
+    // Gestion propre et synchrone des états de lecture
+    utterance.onstart = () => setIsSpeaking(true)
     utterance.onend = () => setIsSpeaking(false)
     utterance.onerror = () => setIsSpeaking(false)
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(utterance)
-    setIsSpeaking(true)
-  }, [isSpeaking, lang, stopSpeech, t.speech])
 
-  // Stop any narration when unmounting or switching language.
-  useEffect(() => {
-    return () => stopSpeech()
-  }, [stopSpeech])
+    window.speechSynthesis.speak(utterance)
+  }, [])
+
+  const toggleAudio = useCallback(() => {
+    if (isSpeaking) {
+      stopSpeech()
+    } else {
+      // Lit le texte correspondant à la langue active (et tout le texte en Wolof si on est sur 'wo')
+      const textToSpeak = lang === 'wo' ? wolofSpeech : t.speech
+      startSpeech(textToSpeak, lang)
+    }
+  }, [isSpeaking, stopSpeech, startSpeech, lang, t.speech])
 
   const toggleLang = useCallback(() => {
     stopSpeech()
-    setLang((prev) => (prev === 'en' ? 'fr' : 'en'))
+    setLang((prev) => {
+      if (prev === 'fr') return 'en'
+      if (prev === 'en') return 'wo'
+      return 'fr'
+    })
   }, [stopSpeech])
+
+  // 🔊 DÉCLENCHEMENT AUDIO PAR DÉFAUT EN WOLOF AU CHARGEMENT DE LA PAGE
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Au démarrage du site, on joue directement le texte d'accueil en Wolof
+      startSpeech(wolofSpeech, 'wo')
+    }, 1000) // Un délai de 1s pour laisser le navigateur autoriser le flux audio
+
+    return () => {
+      clearTimeout(timer)
+      stopSpeech()
+    }
+  }, [startSpeech, stopSpeech])
 
   return (
     <main className="relative flex min-h-svh flex-col overflow-hidden bg-background">
@@ -52,7 +86,7 @@ export function ComingSoon() {
       <div className="relative z-10 flex min-h-svh flex-col">
         <SiteHeader
           lang={lang}
-          audioLabel={t.audioLabel}
+          audioLabel="Wolof"
           langLabel={t.langLabel}
           isSpeaking={isSpeaking}
           onToggleLang={toggleLang}
