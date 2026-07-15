@@ -6,7 +6,7 @@ import { SiteHeader } from '@/components/site-header'
 
 export function ComingSoon() {
   const [lang, setLang] = useState<Lang>('wo')
-  const [isSpeaking, setIsSpeaking] = useState(true)
+  const [isSpeaking, setIsSpeaking] = useState(false) // Correction : désactivé au départ
   const t = content[lang]
 
   const stopSpeech = useCallback(() => {
@@ -20,10 +20,10 @@ export function ComingSoon() {
     const voices = window.speechSynthesis.getVoices()
     utterance.lang = l === 'en' ? 'en-US' : 'fr-FR'
     
-    // Sélection forcée : voix féminine + priorité Google
+    // Sélection de voix féminine prioritaire
     const targetVoice = voices.find(v => 
       v.lang.startsWith(l === 'en' ? 'en' : 'fr') && 
-      (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('female')) &&
+      (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('google')) &&
       !v.name.toLowerCase().includes('male')
     )
     if (targetVoice) utterance.voice = targetVoice
@@ -36,8 +36,12 @@ export function ComingSoon() {
   }, [])
 
   const toggleAudio = useCallback(() => {
-    if (isSpeaking) stopSpeech()
-    else startSpeech(lang === 'wo' ? wolofSpeech : t.speech, lang)
+    if (isSpeaking) {
+      stopSpeech()
+    } else {
+      // Lance l'audio seulement sur demande
+      startSpeech(lang === 'wo' ? wolofSpeech : t.speech, lang)
+    }
   }, [isSpeaking, lang, stopSpeech, startSpeech, t.speech])
 
   const toggleLang = useCallback(() => {
@@ -45,13 +49,15 @@ export function ComingSoon() {
     setLang(p => (p === 'wo' ? 'fr' : p === 'fr' ? 'en' : 'wo'))
   }, [stopSpeech])
 
-  useEffect(() => {
-    startSpeech(wolofSpeech, 'wo')
-  }, [startSpeech])
-
   return (
     <main className="relative flex min-h-svh flex-col bg-background">
-      <SiteHeader lang={lang} audioLabel="Audio" isSpeaking={isSpeaking} onToggleLang={toggleLang} onToggleAudio={toggleAudio} />
+      <SiteHeader 
+        lang={lang} 
+        audioLabel="Audio" 
+        isSpeaking={isSpeaking} 
+        onToggleLang={toggleLang} 
+        onToggleAudio={toggleAudio} 
+      />
       <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
         <h1 className="max-w-3xl text-2xl font-medium tracking-tight sm:text-5xl">
           {t.message.lead}
