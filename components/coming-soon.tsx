@@ -29,24 +29,39 @@ export function ComingSoon() {
     const utterance = new SpeechSynthesisUtterance(textToSpeak)
     utteranceRef.current = utterance
 
-    // Sélection dynamique d'une voix féminine douce et naturelle
+    // Chargement et sélection stricte d'une voix féminine avec une intonation naturelle
     const voices = window.speechSynthesis.getVoices()
     
     if (textLang === 'en') {
       utterance.lang = 'en-US'
-      const englishFemale = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('female')))
+      const englishFemale = voices.find(v => 
+        v.lang.startsWith('en') && 
+        (v.name.includes('Google') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.toLowerCase().includes('female'))
+      )
       if (englishFemale) utterance.voice = englishFemale
       utterance.rate = 0.95
     } else {
+      // Pour le français ou le Wolof, on cherche impérativement une voix féminine douce
       utterance.lang = 'fr-FR'
-      const frenchFemale = voices.find(v => v.lang.startsWith('fr') && (v.name.includes('Amélie') || v.name.includes('Google') || v.name.includes('Hortense') || v.name.includes('Cécile') || v.name.includes('female')))
+      
+      // On classe les voix féminines françaises par ordre de qualité de diction naturelle
+      const frenchFemale = voices.find(v => 
+        v.lang.startsWith('fr') && 
+        (
+          v.name.includes('Amélie') || 
+          v.name.includes('Google français') || 
+          v.name.includes('Cécile') || 
+          v.name.includes('Hortense') || 
+          v.name.toLowerCase().includes('female')
+        )
+      )
       if (frenchFemale) utterance.voice = frenchFemale
       
-      // Vitesse ralentie pour le Wolof afin de donner une prononciation majestueuse, posée et un accent naturel
-      utterance.rate = textLang === 'wo' ? 0.78 : 0.95
+      // Vitesse ralentie à 0.75 pour le Wolof afin de donner cet accent posé, majestueux et naturel propre à la diction locale
+      utterance.rate = textLang === 'wo' ? 0.75 : 0.95
     }
 
-    // Synchronisation stricte de l'icône dès le début de la voix
+    // Changement d'état immédiat dès le début pour éliminer tout lag visuel
     utterance.onstart = () => setIsSpeaking(true)
     utterance.onend = () => setIsSpeaking(false)
     utterance.onerror = () => setIsSpeaking(false)
@@ -72,12 +87,16 @@ export function ComingSoon() {
     })
   }, [stopSpeech])
 
-  // Déclenchement automatique de l'audio Wolof dès l'arrivée sur le site
+  // Déclenchement de l'audio au chargement avec synchronisation immédiate de l'état
   useEffect(() => {
+    // On met l'icône en mode actif "Désactiver le son" immédiatement pour correspondre au démarrage audio
+    setIsSpeaking(true)
+
     const timer = setTimeout(() => {
       startSpeech(wolofSpeech, 'wo')
-    }, 1200) // Laisse le temps au navigateur de charger les voix système
+    }, 1000)
 
+    // Si l'utilisateur clique ou change de page avant la fin, on nettoie proprement
     return () => {
       clearTimeout(timer)
       stopSpeech()
