@@ -1,44 +1,71 @@
-export type Lang = 'fr' | 'en'
+export type Lang = 'en' | 'fr'
 
-export interface ContentStructure {
-  audioLabel: string
-  langLabel: string
-  message: { lead: string; highlight1: string; mid: string; highlight2: string; tail: string }
-  countdown: { days: string; hours: string; minutes: string; seconds: string }
-  form: { placeholder: string; button: string }
-  badges: string[]
-  moreBtn: string
-}
-
-export const content: Record<Lang, ContentStructure> = {
-  fr: {
-    audioLabel: "Audio",
-    langLabel: "Français",
-    message: {
-      lead: "En train de ",
-      highlight1: "concevoir",
-      mid: " une toute nouvelle ",
-      highlight2: "expérience",
-      tail: ". À très bientôt !"
-    },
-    countdown: { days: "Jours", hours: "Heures", minutes: "Min", seconds: "Sec" },
-    form: { placeholder: "Votre e-mail...", button: "S'abonner" },
-    badges: ["Dév Web & Mobile", "Marketing Digital", "Data Science"],
-    moreBtn: "Et bien d'autres..."
-  },
+export const content = {
   en: {
-    audioLabel: "Audio",
-    langLabel: "English",
+    audioLabel: 'Listen to this page',
+    langLabel: 'Switch to French',
+    // Split so we can highlight the key technical words.
     message: {
-      lead: "Crafting a ",
-      highlight1: "brand new",
-      mid: " ",
-      highlight2: "experience",
-      tail: ". Stay in the know!"
+      lead: 'Thank you for being here. Currently ',
+      highlight1: 'crafting',
+      mid: ' a brand new ',
+      highlight2: 'experience',
+      tail: '. See you very soon, I hope.',
     },
-    countdown: { days: "Days", hours: "Hours", minutes: "Min", seconds: "Sec" },
-    form: { placeholder: "Your email...", button: "Notify me" },
-    badges: ["Web & Mobile Dev", "Digital Marketing", "Data Science"],
-    moreBtn: "And much more..."
-  }
-}
+    speech:
+      'Thank you for being here. Currently crafting a brand new experience. See you very soon, I hope.',
+    countdown: {
+      days: 'Days',
+      hours: 'Hours',
+      minutes: 'Minutes',
+      seconds: 'Seconds',
+    },
+    form: {
+      emailTab: 'Email',
+      whatsappTab: 'WhatsApp',
+      emailPlaceholder: 'you@example.com',
+      whatsappPlaceholder: '+1 555 000 0000',
+      notify: 'Notify Me',
+      success: 'You are on the list. Talk soon.',
+    },
+    badges: [
+      'Business Intelligence',
+      'Web & Mobile Engineering',
+      'Digital Marketing Architectures',
+      'And Much More...',
+    ],
+  },
+  fr: {
+    audioLabel: 'Écouter cette page',
+    langLabel: "Passer à l'anglais",
+    message: {
+      lead: "Merci d'être ici. Je suis en train de ",
+      highlight1: 'concevoir',
+      mid: ' une toute nouvelle ',
+      highlight2: 'expérience',
+      tail: '. À très bientôt, je l’espère.',
+    },
+    speech:
+      "Merci d'être ici. Je suis en train de concevoir une toute nouvelle expérience. À très bientôt, je l'espère.",
+    countdown: {
+      days: 'Jours',
+      hours: 'Heures',
+      minutes: 'Minutes',
+      seconds: 'Secondes',
+    },
+    form: {
+      emailTab: 'Email',
+      whatsappTab: 'WhatsApp',
+      emailPlaceholder: 'vous@exemple.com',
+      whatsappPlaceholder: '+33 6 00 00 00 00',
+      notify: 'Me Prévenir',
+      success: 'Vous êtes sur la liste. À très vite.',
+    },
+    badges: [
+      'Business Intelligence',
+      'Ingénierie Web & Mobile',
+      'Architectures Marketing Digital',
+      'Et Bien Plus...',
+    ],
+  },
+} satisfies Record<Lang, unknown>
