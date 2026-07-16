@@ -1,29 +1,18 @@
 export function CircuitBackground() {
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
-      {/* Grille fixe nette */}
+    <div className="fixed inset-0 -z-50 h-full w-full bg-black">
+      {/* Grille explicite - visible en blanc avec 10% d'opacité */}
       <div 
-        className="absolute inset-0 opacity-20" 
+        className="absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), 
-                            linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-          color: 'var(--ember)'
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), 
+                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
         }}
       />
       
-      {/* Animation d'opacité uniquement (0% impact CPU) */}
-      <div className="absolute inset-0 animate-pulse-slow opacity-10 bg-[radial-gradient(circle_at_50%_50%,var(--ember),transparent_70%)]" />
-
-      <style jsx>{`
-        .animate-pulse-slow {
-          animation: pulse-slow 10s ease-in-out infinite;
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.05; }
-          50% { opacity: 0.15; }
-        }
-      `}</style>
+      {/* Un cercle de couleur pour être sûr qu'on voit quelque chose */}
+      <div className="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-orange-500/20 blur-[100px] rounded-full" />
     </div>
   )
 }
