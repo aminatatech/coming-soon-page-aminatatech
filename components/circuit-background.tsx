@@ -1,8 +1,6 @@
 export function CircuitBackground() {
   return (
-    // On force un fond noir absolu ici pour être sûr que ça s'affiche
     <div className="pointer-events-none fixed inset-0 -z-10 h-full w-full bg-[#000000]">
-      {/* Grille fixe nette */}
       <div 
         className="absolute inset-0 opacity-[0.2]" 
         style={{
@@ -11,8 +9,6 @@ export function CircuitBackground() {
           backgroundSize: '60px 60px'
         }}
       />
-      
-      {/* Lueur centrale fixe */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d1310a]/10 blur-[120px] rounded-full" />
     </div>
   )
