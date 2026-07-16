@@ -1,18 +1,18 @@
 export function CircuitBackground() {
   return (
-    <div className="fixed inset-0 -z-50 h-full w-full bg-black">
-      {/* Grille explicite - visible en blanc avec 10% d'opacité */}
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#000000]">
+      {/* Grille avec une couleur fixe bien visible (orange vif) */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 opacity-[0.25]" 
         style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), 
-                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
+          backgroundImage: `linear-gradient(to right, #d1310a 1px, transparent 1px), 
+                            linear-gradient(to bottom, #d1310a 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
         }}
       />
       
-      {/* Un cercle de couleur pour être sûr qu'on voit quelque chose */}
-      <div className="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-orange-500/20 blur-[100px] rounded-full" />
+      {/* Lueur centrale */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d1310a]/10 blur-[120px] rounded-full" />
     </div>
   )
 }
