@@ -1,56 +1,88 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { content, type Lang } from '@/lib/content'
+import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
 import { CountdownTimer } from '@/components/countdown-timer'
 import { SubscribeForm } from '@/components/subscribe-form'
 import { DisciplineBadges } from '@/components/discipline-badges'
-import { CircuitBackground } from '@/components/circuit-background'
 
 export function ComingSoon() {
-  const [lang, setLang] = useState<Lang>('fr')
+  const [lang, setLang] = useState<Lang>('en')
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const t = content[lang]
 
+  const stopSpeech = useCallback(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+    setIsSpeaking(false)
+  }, [])
+
+  const toggleAudio = useCallback(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+    if (isSpeaking) {
+      stopSpeech()
+      return
+    }
+    const utterance = new SpeechSynthesisUtterance(t.speech)
+    utterance.lang = lang === 'en' ? 'en-US' : 'fr-FR'
+    utterance.onend = () => setIsSpeaking(false)
+    utterance.onerror = () => setIsSpeaking(false)
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utterance)
+    setIsSpeaking(true)
+  }, [isSpeaking, lang, stopSpeech, t.speech])
+
+  // Stop any narration when unmounting or switching language.
+  useEffect(() => {
+    return () => stopSpeech()
+  }, [stopSpeech])
+
+  const toggleLang = useCallback(() => {
+    stopSpeech()
+    setLang((prev) => (prev === 'en' ? 'fr' : 'en'))
+  }, [stopSpeech])
+
   return (
-    // Suppression de bg-background pour éviter de couvrir le fond
-    <main className="relative flex min-h-svh flex-col overflow-hidden">
+    <main className="relative flex min-h-svh flex-col overflow-hidden bg-background">
       <CircuitBackground />
-      
+
       <div className="relative z-10 flex min-h-svh flex-col">
-        <SiteHeader 
-          lang={lang} 
-          audioLabel="Audio" 
-          isSpeaking={false} 
-          onToggleLang={() => setLang(p => (p === 'fr' ? 'en' : 'fr'))} 
-          onToggleAudio={() => {}} 
+        <SiteHeader
+          lang={lang}
+          audioLabel={t.audioLabel}
+          langLabel={t.langLabel}
+          isSpeaking={isSpeaking}
+          onToggleLang={toggleLang}
+          onToggleAudio={toggleAudio}
         />
-        
-        <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center">
-          <h1 className="max-w-3xl text-2xl font-medium tracking-tight sm:text-5xl">
+
+        <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center sm:gap-12 sm:px-10">
+          <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
             {t.message.lead}
-            <span className="font-semibold text-ember">{t.message.highlight1}</span>
+            <span
+              className="animate-text-breathe font-semibold text-ember"
+              style={{ willChange: 'opacity' }}
+            >
+              {t.message.highlight1}
+            </span>
             {t.message.mid}
-            <span className="font-semibold text-ember">{t.message.highlight2}</span>
+            <span
+              className="animate-text-breathe font-semibold text-ember [animation-delay:2s]"
+              style={{ willChange: 'opacity' }}
+            >
+              {t.message.highlight2}
+            </span>
             {t.message.tail}
           </h1>
 
           <CountdownTimer labels={t.countdown} />
-          
-          <div className="flex w-full max-w-sm flex-col gap-4">
-            <SubscribeForm labels={t.form} />
-            <div className="mt-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-widest opacity-60">
-              <p>Email: contact@aminata.com</p>
-              <p>WhatsApp: +221 77 000 00 00</p>
-            </div>
-          </div>
 
-          <div className="flex flex-col items-center gap-3">
-            <DisciplineBadges badges={t.badges} />
-            <button className="text-xs font-medium text-ember hover:underline transition-all">
-              {t.moreBtn}
-            </button>
-          </div>
+          <SubscribeForm labels={t.form} />
+
+          <DisciplineBadges badges={t.badges} />
         </div>
       </div>
     </main>
