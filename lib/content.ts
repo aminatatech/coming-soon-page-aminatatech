@@ -4,7 +4,6 @@ export const content = {
   en: {
     audioLabel: 'Listen to this page',
     langLabel: 'Switch to French',
-    // Split so we can highlight the key technical words.
     message: {
       lead: 'Thank you for being here. Currently ',
       highlight1: 'crafting',
@@ -21,8 +20,8 @@ export const content = {
       seconds: 'Seconds',
     },
     form: {
-      emailTab: 'Email',
-      whatsappTab: 'WhatsApp',
+      emailTab: 'Email: contact@aminata.com',
+      whatsappTab: 'WhatsApp: +221 77 000 00 00',
       emailPlaceholder: 'you@example.com',
       whatsappPlaceholder: '+1 555 000 0000',
       notify: 'Notify Me',
@@ -54,8 +53,8 @@ export const content = {
       seconds: 'Secondes',
     },
     form: {
-      emailTab: 'Email',
-      whatsappTab: 'WhatsApp',
+      emailTab: 'Email : contact@aminata.com',
+      whatsappTab: 'WhatsApp : +221 77 000 00 00',
       emailPlaceholder: 'vous@exemple.com',
       whatsappPlaceholder: '+33 6 00 00 00 00',
       notify: 'Me Prévenir',
