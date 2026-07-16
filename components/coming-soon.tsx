@@ -13,27 +13,25 @@ export function ComingSoon() {
   const t = content[lang]
 
   return (
-    // Suppression de bg-background ici pour laisser CircuitBackground gérer le fond
+    // Suppression de bg-background pour éviter de couvrir le fond
     <main className="relative flex min-h-svh flex-col overflow-hidden">
       <CircuitBackground />
       
       <div className="relative z-10 flex min-h-svh flex-col">
-        <header className="flex w-full items-center justify-between px-10 py-8">
-          <span className="font-mono text-lg font-medium lowercase">aminata</span>
-          <button 
-            onClick={() => setLang(p => (p === 'fr' ? 'en' : 'fr'))} 
-            className="rounded-full border border-border px-4 py-1 font-mono text-xs uppercase hover:bg-border/20 transition-colors"
-          >
-            {lang === 'fr' ? 'Français' : 'English'}
-          </button>
-        </header>
+        <SiteHeader 
+          lang={lang} 
+          audioLabel="Audio" 
+          isSpeaking={false} 
+          onToggleLang={() => setLang(p => (p === 'fr' ? 'en' : 'fr'))} 
+          onToggleAudio={() => {}} 
+        />
         
-        <div className="flex flex-1 flex-col items-center justify-center gap-16 px-6 py-12 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center">
           <h1 className="max-w-3xl text-2xl font-medium tracking-tight sm:text-5xl">
             {t.message.lead}
-            <span className="text-ember">{t.message.highlight1}</span>
+            <span className="font-semibold text-ember">{t.message.highlight1}</span>
             {t.message.mid}
-            <span className="text-ember">{t.message.highlight2}</span>
+            <span className="font-semibold text-ember">{t.message.highlight2}</span>
             {t.message.tail}
           </h1>
 
@@ -41,16 +39,15 @@ export function ComingSoon() {
           
           <div className="flex w-full max-w-sm flex-col gap-4">
             <SubscribeForm labels={t.form} />
-            {/* Ajout des infos de contact */}
             <div className="mt-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-widest opacity-60">
               <p>Email: contact@aminata.com</p>
               <p>WhatsApp: +221 77 000 00 00</p>
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-col items-center gap-3">
             <DisciplineBadges badges={t.badges} />
-            <button className="rounded-full border border-dashed border-ember/50 px-4 py-1.5 text-xs font-medium text-ember hover:bg-ember/10 transition-colors">
+            <button className="text-xs font-medium text-ember hover:underline transition-all">
               {t.moreBtn}
             </button>
           </div>
