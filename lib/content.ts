@@ -7,7 +7,7 @@ export interface ContentStructure {
   countdown: { days: string; hours: string; minutes: string; seconds: string }
   form: { placeholder: string; button: string }
   badges: string[]
-  moreBtn: string 
+  moreBtn: string
 }
 
 export const content: Record<Lang, ContentStructure> = {
