@@ -32,7 +32,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
-      <body className="bg-background text-foreground font-sans antialiased">
+      {/* Suppression de bg-background ici pour laisser les pages gérer leur fond */}
+      <body className="text-foreground font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
