@@ -6,6 +6,7 @@ import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
 import { CountdownTimer } from '@/components/countdown-timer'
 import { SubscribeForm } from '@/components/subscribe-form'
+import { Footer } from '@/components/footer'
 import { DisciplineBadges } from '@/components/discipline-badges'
 
 export function ComingSoon() {
