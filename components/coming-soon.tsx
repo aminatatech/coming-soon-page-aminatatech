@@ -48,8 +48,6 @@ export function ComingSoon() {
   return (
     <main className="relative flex min-h-svh flex-col overflow-hidden bg-background">
       <CircuitBackground />
-
-      {/* J'ai retiré min-h-svh ici pour éviter le chevauchement */}
       <div className="relative z-10 flex flex-1 flex-col">
         <SiteHeader
           lang={lang}
@@ -59,35 +57,23 @@ export function ComingSoon() {
           onToggleLang={toggleLang}
           onToggleAudio={toggleAudio}
         />
-
-        {/* Le flex-1 pousse le footer vers le bas */}
         <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center sm:gap-12 sm:px-10">
           <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
             {t.message.lead}
-            <span
-              className="animate-text-breathe font-semibold text-ember"
-              style={{ willChange: 'opacity' }}
-            >
+            <span className="animate-text-breathe font-semibold text-ember" style={{ willChange: 'opacity' }}>
               {t.message.highlight1}
             </span>
             {t.message.mid}
-            <span
-              className="animate-text-breathe font-semibold text-ember [animation-delay:2s]"
-              style={{ willChange: 'opacity' }}
-            >
+            <span className="animate-text-breathe font-semibold text-ember [animation-delay:2s]" style={{ willChange: 'opacity' }}>
               {t.message.highlight2}
             </span>
             {t.message.tail}
           </h1>
-
           <CountdownTimer labels={t.countdown} />
-
           <SubscribeForm labels={t.form} />
-
           <DisciplineBadges badges={t.badges} />
         </div>
-
-        <Footer />
+        <Footer labels={t.footer} />
       </div>
     </main>
   )
