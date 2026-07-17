@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { content, type Lang } from '@/lib/content'
-import  CircuitBackground  from '@/components/circuit-background'
+import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
 import { CountdownTimer } from '@/components/countdown-timer'
 import { SubscribeForm } from '@/components/subscribe-form'
