@@ -49,7 +49,8 @@ export function ComingSoon() {
     <main className="relative flex min-h-svh flex-col overflow-hidden bg-background">
       <CircuitBackground />
 
-      <div className="relative z-10 flex min-h-svh flex-col">
+      {/* J'ai retiré min-h-svh ici pour éviter le chevauchement */}
+      <div className="relative z-10 flex flex-1 flex-col">
         <SiteHeader
           lang={lang}
           audioLabel={t.audioLabel}
@@ -59,7 +60,7 @@ export function ComingSoon() {
           onToggleAudio={toggleAudio}
         />
 
-        {/* Conteneur principal qui prend l'espace disponible */}
+        {/* Le flex-1 pousse le footer vers le bas */}
         <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center sm:gap-12 sm:px-10">
           <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
             {t.message.lead}
@@ -86,7 +87,6 @@ export function ComingSoon() {
           <DisciplineBadges badges={t.badges} />
         </div>
 
-        {/* Le Footer est maintenant intégré et poussé en bas */}
         <Footer />
       </div>
     </main>
