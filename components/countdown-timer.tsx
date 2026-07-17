@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 
 type CountdownLabels = {
   days: string
@@ -11,7 +11,7 @@ type CountdownLabels = {
 
 const TARGET_DATE = new Date('2026-09-30T00:00:00')
 
-export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
+const CountdownTimer = memo(function CountdownTimer({ labels }: { labels: CountdownLabels }) {
   const calculateTimeLeft = () => {
     const difference = +TARGET_DATE - +new Date()
     if (difference <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
@@ -23,7 +23,7 @@ export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
     }
   }
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,7 +52,10 @@ export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
             </span>
           </div>
           {i < units.length - 1 && (
-            <span aria-hidden="true" className="font-mono text-2xl font-light text-ember/50 sm:text-4xl">
+            <span
+              aria-hidden="true"
+              className="font-mono text-2xl font-light text-ember/50 sm:text-4xl"
+            >
               :
             </span>
           )}
@@ -60,4 +63,6 @@ export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
       ))}
     </ul>
   )
-}
+})
+
+export { CountdownTimer }
