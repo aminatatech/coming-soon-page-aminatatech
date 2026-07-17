@@ -20,7 +20,7 @@ export function Footer() {
         ))}
       </div>
       <p className="mt-6 text-[10px] text-foreground/40">
-        © {new Date().getFullYear()} Aminata. Tous droits réservés.
+        © {new Date().getFullYear()} Aminata Ndiaye. Tous droits réservés.
       </p>
     </footer>
   )
