@@ -1,27 +1,21 @@
-export function Footer() {
-  const links = [
-    { name: 'Mentions Légales', href: '/mentions-legales' },
-    { name: 'Confidentialité', href: '/confidentialite' },
-    { name: 'CGV', href: '/cgv' },
-    { name: 'Contact', href: '/contact' },
-  ]
+type FooterLabels = {
+  legal: string
+  privacy: string
+  rights: string
+}
 
+export function Footer({ labels }: { labels: FooterLabels }) {
   return (
-    <footer className="mt-auto w-full py-8 text-center">
-      <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-6">
-        {links.map((link) => (
-          <a
-            key={link.name}
-            href={link.href}
-            className="text-xs font-medium text-foreground/60 transition-colors hover:text-ember"
-          >
-            {link.name}
-          </a>
-        ))}
+    <footer className="w-full py-8 text-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="flex justify-center gap-6">
+        <a href="/mentions-legales" className="hover:text-ember transition-colors">
+          {labels.legal}
+        </a>
+        <a href="/confidentialite" className="hover:text-ember transition-colors">
+          {labels.privacy}
+        </a>
       </div>
-      <p className="mt-6 text-[10px] text-foreground/40">
-        © {new Date().getFullYear()} Aminata Ndiaye. Tous droits réservés.
-      </p>
+      <p className="mt-6">{labels.rights}</p>
     </footer>
   )
 }
