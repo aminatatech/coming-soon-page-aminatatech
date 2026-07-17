@@ -6,8 +6,8 @@ import { CircuitBackground } from '@/components/circuit-background'
 import { SiteHeader } from '@/components/site-header'
 import { CountdownTimer } from '@/components/countdown-timer'
 import { SubscribeForm } from '@/components/subscribe-form'
-import { Footer } from '@/components/footer'
 import { DisciplineBadges } from '@/components/discipline-badges'
+import { Footer } from '@/components/footer'
 
 export function ComingSoon() {
   const [lang, setLang] = useState<Lang>('en')
@@ -36,7 +36,6 @@ export function ComingSoon() {
     setIsSpeaking(true)
   }, [isSpeaking, lang, stopSpeech, t.speech])
 
-  // Stop any narration when unmounting or switching language.
   useEffect(() => {
     return () => stopSpeech()
   }, [stopSpeech])
@@ -60,6 +59,7 @@ export function ComingSoon() {
           onToggleAudio={toggleAudio}
         />
 
+        {/* Conteneur principal qui prend l'espace disponible */}
         <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12 text-center sm:gap-12 sm:px-10">
           <h1 className="max-w-3xl text-balance text-2xl font-medium leading-relaxed tracking-tight sm:text-4xl md:text-5xl">
             {t.message.lead}
@@ -85,6 +85,9 @@ export function ComingSoon() {
 
           <DisciplineBadges badges={t.badges} />
         </div>
+
+        {/* Le Footer est maintenant intégré et poussé en bas */}
+        <Footer />
       </div>
     </main>
   )
