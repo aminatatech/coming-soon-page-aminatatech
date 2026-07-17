@@ -33,12 +33,10 @@ export function SubscribeForm({ labels }: { labels: FormLabels }) {
         aria-label="Notification channel"
         className="mx-auto mb-4 flex w-fit items-center gap-1 rounded-full border border-border p-1"
       >
-        {(
-          [
-            { id: 'email' as const, label: labels.emailTab, Icon: Mail },
-            { id: 'whatsapp' as const, label: labels.whatsappTab, Icon: MessageCircle },
-          ]
-        ).map(({ id, label, Icon }) => (
+        {[
+          { id: 'email' as const, label: labels.emailTab, Icon: Mail },
+          { id: 'whatsapp' as const, label: labels.whatsappTab, Icon: MessageCircle },
+        ].map(({ id, label, Icon }) => (
           <button
             key={id}
             type="button"
