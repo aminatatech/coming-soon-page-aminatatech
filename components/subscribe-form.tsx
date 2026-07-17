@@ -27,7 +27,7 @@ export function SubscribeForm({ labels }: { labels: FormLabels }) {
 
   return (
     <div className="w-full max-w-md">
-      {/* Channel toggle */}
+      {/* Channel toggle - Icônes uniquement */}
       <div
         role="tablist"
         aria-label="Notification channel"
@@ -42,18 +42,19 @@ export function SubscribeForm({ labels }: { labels: FormLabels }) {
             type="button"
             role="tab"
             aria-selected={channel === id}
+            aria-label={label}
             onClick={() => {
               setChannel(id)
               setSubmitted(false)
+              setValue('')
             }}
-            className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               channel === id
                 ? 'bg-ember text-primary-foreground'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
-            <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-            {label}
+            <Icon className="h-4 w-4" aria-hidden="true" />
           </button>
         ))}
       </div>
@@ -73,9 +74,6 @@ export function SubscribeForm({ labels }: { labels: FormLabels }) {
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
               )}
             </span>
-            <label htmlFor="subscribe-input" className="sr-only">
-              {channel === 'email' ? labels.emailTab : labels.whatsappTab}
-            </label>
             <input
               id="subscribe-input"
               type={channel === 'email' ? 'email' : 'tel'}
