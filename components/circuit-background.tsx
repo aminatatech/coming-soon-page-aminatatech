@@ -1,5 +1,5 @@
 // Static, lightweight SVG circuit lines. No JS, no canvas, no particles.
-// Only 3 paths carry a very slow CSS opacity glow via `will-change: opacity`.
+// Only 3 paths carry avery slow CSS opacity glow via `will-change: opacity`.
 export function CircuitBackground() {
   return (
     <div
