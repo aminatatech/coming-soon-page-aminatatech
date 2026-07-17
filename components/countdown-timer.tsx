@@ -1,3 +1,7 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+
 type CountdownLabels = {
   days: string
   hours: string
@@ -5,13 +9,46 @@ type CountdownLabels = {
   seconds: string
 }
 
-// Fixed at exactly 60 Days — pure CSS text, no timers, no JS cost.
 export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
+  // On initialise avec tes valeurs par défaut
+  const [timeLeft, setTimeLeft] = useState({
+    days: 60,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+
+  useEffect(() => {
+    // Calcul de la fin pour garder la logique simple
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        let { days, hours, minutes, seconds } = prev
+        
+        seconds--
+        if (seconds < 0) {
+          seconds = 59
+          minutes--
+        }
+        if (minutes < 0) {
+          minutes = 59
+          hours--
+        }
+        if (hours < 0) {
+          hours = 23
+          days--
+        }
+        return { days, hours, minutes, seconds }
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   const units = [
-    { value: '60', label: labels.days },
-    { value: '00', label: labels.hours },
-    { value: '00', label: labels.minutes },
-    { value: '00', label: labels.seconds },
+    { value: String(timeLeft.days).padStart(2, '0'), label: labels.days },
+    { value: String(timeLeft.hours).padStart(2, '0'), label: labels.hours },
+    { value: String(timeLeft.minutes).padStart(2, '0'), label: labels.minutes },
+    { value: String(timeLeft.seconds).padStart(2, '0'), label: labels.seconds },
   ]
 
   return (
