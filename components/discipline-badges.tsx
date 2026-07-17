@@ -5,7 +5,7 @@ export function DisciplineBadges({ badges }: { badges: string[] }) {
         <li key={badge}>
           <span
             className="animate-badge-pulse block rounded-full border border-border px-4 py-2 font-mono text-xs tracking-wide text-foreground/80 sm:text-sm"
-            style={{ animationDelay: `${i * 0.8}s`, willChange: 'opacity' }}
+            style={{ animationDelay: `${i * 0.8}s` }}
           >
             {badge}
           </span>
