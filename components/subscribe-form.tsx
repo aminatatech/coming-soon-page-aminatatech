@@ -27,34 +27,34 @@ export function SubscribeForm({ labels }: { labels: FormLabels }) {
 
   return (
     <div className="w-full max-w-md">
-      {/* Channel toggle - Icônes uniquement */}
+      {/* Channel toggle avec icône et texte */}
       <div
         role="tablist"
         aria-label="Notification channel"
-        className="mx-auto mb-4 flex w-fit items-center gap-1 rounded-full border border-border p-1"
+        className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-border p-1"
       >
         {[
-          { id: 'email' as const, label: labels.emailTab, Icon: Mail },
-          { id: 'whatsapp' as const, label: labels.whatsappTab, Icon: MessageCircle },
+          { id: 'email' as const, label: 'Email', Icon: Mail },
+          { id: 'whatsapp' as const, label: 'WhatsApp', Icon: MessageCircle },
         ].map(({ id, label, Icon }) => (
           <button
             key={id}
             type="button"
             role="tab"
             aria-selected={channel === id}
-            aria-label={label}
             onClick={() => {
               setChannel(id)
               setSubmitted(false)
               setValue('')
             }}
-            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            className={`flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               channel === id
                 ? 'bg-ember text-primary-foreground'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <Icon className="h-4 w-4" aria-hidden="true" />
+            {label}
           </button>
         ))}
       </div>
