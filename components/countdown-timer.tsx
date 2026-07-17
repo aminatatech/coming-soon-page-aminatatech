@@ -9,36 +9,28 @@ type CountdownLabels = {
   seconds: string
 }
 
+// Date cible fixe (ex: 30 septembre 2026 à 00:00:00)
+const TARGET_DATE = new Date('2026-09-30T00:00:00')
+
 export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
-  // On initialise avec tes valeurs par défaut
-  const [timeLeft, setTimeLeft] = useState({
-    days: 60,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  })
+  const calculateTimeLeft = () => {
+    const difference = +TARGET_DATE - +new Date()
+    
+    if (difference <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    }
+  }
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
 
   useEffect(() => {
-    // Calcul de la fin pour garder la logique simple
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { days, hours, minutes, seconds } = prev
-        
-        seconds--
-        if (seconds < 0) {
-          seconds = 59
-          minutes--
-        }
-        if (minutes < 0) {
-          minutes = 59
-          hours--
-        }
-        if (hours < 0) {
-          hours = 23
-          days--
-        }
-        return { days, hours, minutes, seconds }
-      })
+      setTimeLeft(calculateTimeLeft())
     }, 1000)
 
     return () => clearInterval(timer)
@@ -64,10 +56,7 @@ export function CountdownTimer({ labels }: { labels: CountdownLabels }) {
             </span>
           </div>
           {i < units.length - 1 && (
-            <span
-              aria-hidden="true"
-              className="font-mono text-2xl font-light text-ember/50 sm:text-4xl"
-            >
+            <span aria-hidden="true" className="font-mono text-2xl font-light text-ember/50 sm:text-4xl">
               :
             </span>
           )}
