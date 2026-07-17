@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'aminata.',
+  title: 'aminata - Coming soon',
   description:
     'A brand new experience is being crafted. Business Intelligence, Web & Mobile Engineering, and Digital Marketing Architectures.',
   generator: 'v0.app',
