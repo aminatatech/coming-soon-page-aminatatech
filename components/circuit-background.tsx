@@ -19,11 +19,11 @@ export default function CircuitBackground() {
     }
 
     const draw = () => {
-      // Nettoyage simplifié pour moins de calculs
+      // Fond semi-transparent pour limiter le redessin total
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Réduction du nombre de points pour soulager le processeur
+      // Nombre réduit de points pour limiter la charge GPU
       const time = Date.now() * 0.0005
       const numLights = 20 
 
@@ -44,7 +44,7 @@ export default function CircuitBackground() {
     resize()
     draw()
 
-    // La fonction de nettoyage empêche l'animation de tourner en arrière-plan
+    // C'EST CETTE LIGNE QUI EMPÊCHE LA CHAUFFE APRES AVOIR QUITTÉ LA PAGE
     return () => {
       window.removeEventListener('resize', resize)
       cancelAnimationFrame(animationFrameId)
